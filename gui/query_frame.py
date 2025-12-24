@@ -93,7 +93,8 @@ class QueryFrame(ttk.Frame):
         try:
             results = self.db_manager.get_warning_list()
             if results:
-                self.display_result("预警学生名单", results)
+                self.display_result("预警学生名单", results, 
+                                  ["学号", "姓名", "院系", "预警原因", "已获学分", "要求学分", "核心课程不及格数", "不及格上限"])
             else:
                 self.result_text.delete(1.0, tk.END)
                 self.result_text.insert(tk.END, "预警学生名单\n" + "=" * 80 + "\n\n没有预警学生\n")

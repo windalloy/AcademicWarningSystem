@@ -353,12 +353,12 @@ class DatabaseManager:
         """获取各院系统计"""
         query = """
             SELECT 
-                S.Dept AS 院系,
+                SG.院系,
                 COUNT(*) AS 学生人数,
-                ROUND(AVG(S.GPA), 2) AS 平均GPA,
-                ROUND(AVG(S.TotalCredit), 2) AS 平均已获学分
-            FROM Student S
-            GROUP BY S.Dept
+                ROUND(AVG(SG.平均绩点), 2) AS 平均GPA,
+                ROUND(AVG(SG.已获学分), 2) AS 平均已获学分
+            FROM StudentGPAView SG
+            GROUP BY SG.院系
             ORDER BY 平均GPA DESC
         """
         return self.execute_query(query)
