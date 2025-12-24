@@ -2,6 +2,46 @@
 
 ## 实体关系图（ER Diagram）
 
+### 版本一：传统ER图（带菱形关系实体）
+
+```mermaid
+flowchart TB
+    %% 实体定义（使用圆角矩形表示）
+    Student[学生<br/>Student<br/>─────<br/>SNo: PK<br/>SName<br/>Dept<br/>EnrollmentYear]
+    Course[课程<br/>Course<br/>─────<br/>CNo: PK<br/>CName<br/>Credit<br/>CourseType]
+    Score[成绩<br/>Score<br/>─────<br/>SNo: PK,FK<br/>CNo: PK,FK<br/>Semester: PK<br/>ScoreValue]
+    GraduationRequirement[毕业要求<br/>GraduationRequirement<br/>─────<br/>ReqID: PK<br/>Dept: UK<br/>TotalCreditRequired<br/>CoreCourseFailLimit<br/>MinGPA]
+    CoreCourse[核心课程<br/>CoreCourse<br/>─────<br/>Dept: PK,FK<br/>CNo: PK,FK]
+    
+    %% 关系菱形（使用菱形表示，标注关系类型）
+    R1{"选课<br/>1 : N"}
+    R2{"被选<br/>1 : N"}
+    R3{"属于院系<br/>N : 1"}
+    R4{"核心课程<br/>1 : N"}
+    R5{"院系配置<br/>1 : N"}
+    
+    %% 连接关系（在连线上标注基数）
+    Student ---|"1"| R1
+    R1 ---|"N"| Score
+    Course ---|"1"| R2
+    R2 ---|"N"| Score
+    Student ---|"N"| R3
+    R3 ---|"1"| GraduationRequirement
+    Course ---|"1"| R4
+    R4 ---|"N"| CoreCourse
+    GraduationRequirement ---|"1"| R5
+    R5 ---|"N"| CoreCourse
+    
+    %% 样式定义（实体：蓝色，关系：黄色）
+    classDef entityStyle fill:#e1f5ff,stroke:#01579b,stroke-width:3px,color:#000
+    classDef relationStyle fill:#fff9c4,stroke:#f57f17,stroke-width:3px,color:#000
+    
+    class Student,Course,Score,GraduationRequirement,CoreCourse entityStyle
+    class R1,R2,R3,R4,R5 relationStyle
+```
+
+### 版本二：简化ER图（Mermaid标准格式）
+
 ```mermaid
 erDiagram
     %% 核心实体：成绩表（放在中心位置）
@@ -41,12 +81,12 @@ erDiagram
         VARCHAR CNo PK "课程号(外键)"
     }
     
-    %% 关系定义：使用简短清晰的标签
-    Student ||--o{ Score : "选课"
-    Course ||--o{ Score : "被选"
-    Student }o--|| GraduationRequirement : "属于"
-    Course ||--o{ CoreCourse : "核心课程"
-    GraduationRequirement ||--o{ CoreCourse : "院系配置"
+    %% 关系定义：明确标注关系类型
+    Student ||--o{ Score : "选课(1:N)"
+    Course ||--o{ Score : "被选(1:N)"
+    Student }o--|| GraduationRequirement : "属于院系(N:1)"
+    Course ||--o{ CoreCourse : "核心课程(1:N)"
+    GraduationRequirement ||--o{ CoreCourse : "院系配置(1:N)"
 ```
 
 ## 实体说明
