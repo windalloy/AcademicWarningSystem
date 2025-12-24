@@ -4,12 +4,15 @@
 
 ```mermaid
 erDiagram
-    Student ||--o{ Score : "选课"
-    Course ||--o{ Score : "被选"
-    Student ||--o| GraduationRequirement : "属于"
-    Course ||--o{ CoreCourse : "是核心课程"
-    Student ||--o{ CoreCourse : "专业对应"
+    %% 核心实体：成绩表（放在中心位置）
+    Score {
+        VARCHAR SNo PK_FK "学号"
+        VARCHAR CNo PK_FK "课程号"
+        VARCHAR Semester PK "学期"
+        DECIMAL ScoreValue "成绩"
+    }
     
+    %% 主要实体
     Student {
         VARCHAR SNo PK "学号"
         VARCHAR SName "姓名"
@@ -21,16 +24,10 @@ erDiagram
         VARCHAR CNo PK "课程号"
         VARCHAR CName "课程名"
         DECIMAL Credit "学分"
-        ENUM CourseType "课程类型(核心/通识/选修)"
+        ENUM CourseType "课程类型"
     }
     
-    Score {
-        VARCHAR SNo PK,FK "学号"
-        VARCHAR CNo PK,FK "课程号"
-        VARCHAR Semester PK "学期"
-        DECIMAL ScoreValue "成绩(0-100)"
-    }
-    
+    %% 配置实体
     GraduationRequirement {
         INT ReqID PK "要求ID"
         VARCHAR Dept UK "适用院系"
@@ -40,9 +37,16 @@ erDiagram
     }
     
     CoreCourse {
-        VARCHAR Dept PK,FK "院系"
-        VARCHAR CNo PK,FK "课程号"
+        VARCHAR Dept PK_FK "院系"
+        VARCHAR CNo PK_FK "课程号"
     }
+    
+    %% 关系定义：使用简短清晰的标签
+    Student ||--o{ Score : "选课"
+    Course ||--o{ Score : "被选"
+    Student }o--|| GraduationRequirement : "属于"
+    Course ||--o{ CoreCourse : "核心课程"
+    GraduationRequirement ||--o{ CoreCourse : "院系配置"
 ```
 
 ## 实体说明
@@ -120,4 +124,20 @@ erDiagram
 2. **级联删除**：保证数据完整性
 3. **联合主键**：Score 和 CoreCourse 使用联合主键，支持同一学生同一课程多次选课（不同学期）
 4. **索引优化**：在常用查询字段上建立索引，提高查询性能
+
+## 使用提示
+
+**如果关系标签显示过小或被遮挡，建议：**
+
+1. **在线Mermaid编辑器**：访问 https://mermaid.live/ 或 https://mermaid.ink/ 查看和导出
+2. **导出为SVG/PNG**：在支持Mermaid的编辑器中导出为图片，然后放大查看
+3. **调整浏览器缩放**：在Markdown预览中按 `Ctrl + 滚轮` 放大查看
+4. **使用专业工具**：如Draw.io、Lucidchart等工具重新绘制，可以完全控制字体大小和布局
+
+**关系说明（如标签看不清可参考）：**
+- Student → Score：选课（1对多）
+- Course → Score：被选（1对多）
+- Student → GraduationRequirement：属于院系（多对1）
+- Course → CoreCourse：核心课程（1对多）
+- GraduationRequirement → CoreCourse：院系配置（1对多）
 

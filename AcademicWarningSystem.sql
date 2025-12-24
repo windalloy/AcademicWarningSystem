@@ -15,18 +15,6 @@ CREATE DATABASE IF NOT EXISTS AcademicWarningSystem
 
 USE AcademicWarningSystem;
 
--- SQL Server 语法（注释掉，如需使用请取消注释）
-/*
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'AcademicWarningSystem')
-BEGIN
-    CREATE DATABASE AcademicWarningSystem
-    COLLATE Chinese_PRC_CI_AS;
-END
-GO
-USE AcademicWarningSystem;
-GO
-*/
-
 -- ============================================
 -- 第二部分：创建数据表（DDL）
 -- ============================================
@@ -500,25 +488,4 @@ SELECT
     平均绩点
 FROM StudentGPAView
 ORDER BY 学号;
-
--- ============================================
--- 脚本执行完成
--- ============================================
--- 说明：
--- 1. 本脚本兼容 MySQL 8.0，如需在 SQL Server 2019 中运行，请修改：
---    - 将 AUTO_INCREMENT 改为 IDENTITY(1,1)
---    - 将 ENUM 改为 CHECK 约束
---    - 将 DELIMITER 语法改为 GO
---    - 将 TINYINT(1) 改为 BIT
---    - 将 ENGINE=InnoDB 等MySQL特性删除
--- 
--- 2. 触发器在插入/更新成绩时会自动：
---    - 计算绩点（GPA_Point）
---    - 判断是否通过（Is_Passed）
---    - 更新学生的总学分和平均GPA
---
--- 3. 使用存储过程 usp_GenerateWarningList() 可以生成预警学生名单
---
--- 4. 所有视图、触发器、存储过程已创建完成，可以直接使用
--- ============================================
 
