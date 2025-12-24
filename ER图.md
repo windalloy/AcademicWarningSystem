@@ -6,27 +6,35 @@
 
 ```mermaid
 flowchart TB
-    %% 实体定义（使用圆角矩形表示）
-    Student[学生<br/>Student<br/>─────<br/>SNo: PK<br/>SName<br/>Dept<br/>EnrollmentYear]
-    Course[课程<br/>Course<br/>─────<br/>CNo: PK<br/>CName<br/>Credit<br/>CourseType]
-    Score[成绩<br/>Score<br/>─────<br/>SNo: PK,FK<br/>CNo: PK,FK<br/>Semester: PK<br/>ScoreValue]
-    GraduationRequirement[毕业要求<br/>GraduationRequirement<br/>─────<br/>ReqID: PK<br/>Dept: UK<br/>TotalCreditRequired<br/>CoreCourseFailLimit<br/>MinGPA]
-    CoreCourse[核心课程<br/>CoreCourse<br/>─────<br/>Dept: PK,FK<br/>CNo: PK,FK]
+    subgraph top[" "]
+        direction LR
+        Student[学生<br/>Student<br/>─────<br/>SNo: PK<br/>SName<br/>Dept<br/>EnrollmentYear]
+        R1{"选课<br/>1 : N"}
+        Score[成绩<br/>Score<br/>─────<br/>SNo: PK,FK<br/>CNo: PK,FK<br/>Semester: PK<br/>ScoreValue]
+        R2{"被选<br/>1 : N"}
+        Course[课程<br/>Course<br/>─────<br/>CNo: PK<br/>CName<br/>Credit<br/>CourseType]
+    end
     
-    %% 关系菱形（使用菱形表示，标注关系类型）
-    R1{"选课<br/>1 : N"}
-    R2{"被选<br/>1 : N"}
-    R3{"属于院系<br/>N : 1"}
-    R4{"核心课程<br/>1 : N"}
-    R5{"院系配置<br/>1 : N"}
+    subgraph bottom[" "]
+        direction LR
+        R3{"属于院系<br/>N : 1"}
+        GraduationRequirement[毕业要求<br/>GraduationRequirement<br/>─────<br/>ReqID: PK<br/>Dept: UK<br/>TotalCreditRequired<br/>CoreCourseFailLimit<br/>MinGPA]
+        R5{"院系配置<br/>1 : N"}
+        CoreCourse[核心课程<br/>CoreCourse<br/>─────<br/>Dept: PK,FK<br/>CNo: PK,FK]
+        R4{"核心课程<br/>1 : N"}
+    end
     
-    %% 连接关系（在连线上标注基数）
+    %% 连接关系（上方：Student和Course到Score）
     Student ---|"1"| R1
     R1 ---|"N"| Score
-    Course ---|"1"| R2
-    R2 ---|"N"| Score
+    Score ---|"N"| R2
+    R2 ---|"1"| Course
+    
+    %% 连接关系（下方：Student到GraduationRequirement）
     Student ---|"N"| R3
     R3 ---|"1"| GraduationRequirement
+    
+    %% 连接关系（下方：Course和GraduationRequirement到CoreCourse）
     Course ---|"1"| R4
     R4 ---|"N"| CoreCourse
     GraduationRequirement ---|"1"| R5
