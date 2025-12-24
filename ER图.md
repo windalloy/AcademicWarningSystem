@@ -6,8 +6,8 @@
 erDiagram
     %% 核心实体：成绩表（放在中心位置）
     Score {
-        VARCHAR SNo PK_FK "学号"
-        VARCHAR CNo PK_FK "课程号"
+        VARCHAR SNo PK "学号(外键)"
+        VARCHAR CNo PK "课程号(外键)"
         VARCHAR Semester PK "学期"
         DECIMAL ScoreValue "成绩"
     }
@@ -37,8 +37,8 @@ erDiagram
     }
     
     CoreCourse {
-        VARCHAR Dept PK_FK "院系"
-        VARCHAR CNo PK_FK "课程号"
+        VARCHAR Dept PK "院系(外键)"
+        VARCHAR CNo PK "课程号(外键)"
     }
     
     %% 关系定义：使用简短清晰的标签
